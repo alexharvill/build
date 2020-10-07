@@ -8,54 +8,60 @@ import os
 import sys
 import argparse
 
-AP = argparse.ArgumentParser(description=__doc__)
 
-AP.add_argument(
-    '--license',
-    help='path to a sample license text file',
-)
-AP.add_argument(
-    '--replace-licenses',
-    help='paths to license text files to remove',
-    nargs='+',
-)
+def build_parser():
+  'returns a parser (can be used by the tool below or by sphinx)'
 
-AP.add_argument(
-    '--file-types',
-    help='list of file extensions',
-    nargs='*',
-    default=[
-        '.py',
-        '.swift',
-        '.cpp',
-        '.h',
-        '.proto',
-        '.txt',
-        '.sh',
-        '.md',
-        '.rst',
-        '.yml',
-        '.cmake',
-    ],
-)
-AP.add_argument(
-    '--exclude',
-    help='list of directory and file names to exclude',
-    nargs='*',
-    default=['third_party'],
-)
+  AP = argparse.ArgumentParser(description=__doc__)
 
-AP.add_argument(
-    '--directory',
-    help='path to a base directory to search inside',
-    default='./',
-)
+  AP.add_argument(
+      '--license',
+      help='path to a sample license text file',
+  )
+  AP.add_argument(
+      '--replace-licenses',
+      help='paths to license text files to remove',
+      nargs='+',
+  )
 
-AP.add_argument(
-    '--action',
-    help='path to a base directory to search inside',
-    choices=['print', 'execute'],
-)
+  AP.add_argument(
+      '--file-types',
+      help='list of file extensions',
+      nargs='*',
+      default=[
+          '.py',
+          '.swift',
+          '.cpp',
+          '.h',
+          '.proto',
+          '.txt',
+          '.sh',
+          '.md',
+          '.rst',
+          '.yml',
+          '.cmake',
+      ],
+  )
+  AP.add_argument(
+      '--exclude',
+      help='list of directory and file names to exclude',
+      nargs='*',
+      default=['third_party'],
+  )
+
+  AP.add_argument(
+      '--directory',
+      help='path to a base directory to search inside',
+      default='./',
+  )
+
+  AP.add_argument(
+      '--action',
+      help='path to a base directory to search inside',
+      choices=['print', 'execute'],
+  )
+
+  return AP
 
 
 def process_file(ext, path, header, relpace_headers, execute):
@@ -103,7 +109,7 @@ def process_file(ext, path, header, relpace_headers, execute):
 
 def main():
   'find files, add license'
-  args = AP.parse_args()
+  args = build_parser().parse_args()
   with open(args.license) as fd:
     header = fd.read()
 

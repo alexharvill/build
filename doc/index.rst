@@ -9,16 +9,28 @@ build
 
 Copyright (c) 2020 Alex Harvill.  All rights reserved.
 
-A wrapper to run build systems.  Wraps cmake, xcode, vcpkg where cmake is mostly in charge.  A python virtual env is expected.
+Wraps cmake, xcode, vcpkg where cmake is mostly in charge.
+A python virtual env is expected.
 
-.. argparse::
-   :filename: ../build.py
-   :func: build_parser
-   :prog: build.py
+`build
+<https://github.com/alexharvill/build>`_ is primarily intended for use in my day job but may also be used in personal projects from time to time.
 
-.. automodule:: vm_build_utils
-   :members:
-   :undoc-members:
+.. toctree::
+   :maxdepth: 1
+   :caption: build.py
+
+   build
+
+.. toctree::
+   :maxdepth: 1
+   :caption: vm_build_utils
+
+   vm_build_utils_cmd
+   vm_build_utils_git_module_info
+   vm_build_utils_license
+   vm_build_utils_retina_icons
+   vm_build_utils_vcpkg
+
 
 
 Indices and tables
