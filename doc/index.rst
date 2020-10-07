@@ -16,11 +16,9 @@ A wrapper to run build systems.  Wraps cmake, xcode, vcpkg where cmake is mostly
    :func: build_parser
    :prog: build.py
 
-.. toctree::
-   :maxdepth: 4
-   :caption: Python Package:
-
-   vm_build_utils
+.. automodule:: vm_build_utils
+   :members:
+   :undoc-members:
 
 
 Indices and tables
