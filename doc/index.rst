@@ -11,11 +11,10 @@ Copyright (c) 2020 Alex Harvill.  All rights reserved.
 
 A wrapper to run build systems.  Wraps cmake, xcode, vcpkg where cmake is mostly in charge.  A python virtual env is expected.
 
-.. toctree::
-   :maxdepth: 1
-   :caption: Command Line Tools:
-
-   build_cmd
+.. argparse::
+   :filename: ../build.py
+   :func: build_parser
+   :prog: build.py
 
 .. toctree::
    :maxdepth: 4
