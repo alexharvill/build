@@ -6,6 +6,9 @@ build
 .. image:: https://img.shields.io/badge/Maintained-yes-green.svg
    :alt: Maintained Yes
    :target: https://github.com/alexharvill/build/graphs/commit-activity
+.. image:: https://readthedocs.org/projects/alexharvill-build/badge/?version=latest
+   :alt: Documentation Status
+   :target: https://alexharvill-build.readthedocs.io/en/latest/?badge=latest
 
 Copyright (c) 2020 Alex Harvill.  All rights reserved.
 
