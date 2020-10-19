@@ -47,7 +47,7 @@ def build_parser():
   AP.add_argument(
       '--toolchain-path',
       help='path to a toolchain file - stomped by --ios and --swift',
-      default='third_party/vcpkg/scripts/buildsystems/vcpkg.cmake',
+      default='../foundation/third_party/vcpkg/scripts/buildsystems/vcpkg.cmake',
   )
   AP.add_argument(
       '--build-type',
