@@ -1,0 +1,6 @@
+.vscode/ipch
+test/result/
+*xcuserdata*
+.DS_Store
+.coverage
+DerivedData

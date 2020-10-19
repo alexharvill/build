@@ -1,0 +1,13 @@
+[MASTER]
+extension-pkg-whitelist=cv2,nanogui,aruco
+unsafe-load-any-extension=yes
+
+[TYPECHECK]
+ignored-modules=boto3,botocore
+
+[MESSAGES CONTROL]
+disable=W0311,C0103,C0330,useless-object-inheritance
+
+[REPORTS]
+output-format=text
+msg-template={line},{column},{category},{symbol}:{msg}
