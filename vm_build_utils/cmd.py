@@ -499,11 +499,11 @@ class T(object):
     self.start = self.end = self.interval = 0
 
   def __enter__(self):
-    self.start = time.clock()
+    self.start = time.perf_counter()
     return self
 
   def __exit__(self, *args):
-    self.end = time.clock()
+    self.end = time.perf_counter()
     self.interval = self.end - self.start
     gc.collect()
     logging.info(
