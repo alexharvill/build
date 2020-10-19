@@ -8,12 +8,12 @@ from __future__ import print_function
 import os
 import re
 import sys
-import glob
 import argparse
 import logging
 import subprocess
 import unittest
 import pprint
+from pathlib import Path
 
 sys.dont_write_bytecode = True
 
@@ -21,10 +21,6 @@ sys.dont_write_bytecode = True
 import vm_build_utils.cmd
 import vm_build_utils.git_module_info
 import vm_build_utils.vcpkg
-# import vm_build_utils.xcode
-
-#pylint: disable=wrong-import-order
-from pathlib import Path
 
 
 def build_parser():
