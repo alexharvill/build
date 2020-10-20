@@ -477,11 +477,21 @@ GB = float(10**9)  # 1000000000
 GiB = float(2**30)  # 1073741824
 
 
+def current_platform_is_darwin():
+  'returns true if current system is darwin, false on linux or windows'
+  return platform.system().lower() == 'darwin'
+
+
+def current_platform_is_linux():
+  'returns true if current system is linux, false on darwin or windows'
+  return platform.system().lower() == 'linux'
+
+
 def get_rss():
   'get memory usage if psutil is installed'
   rss_bytes = 0
   maxrss = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
-  if platform.system() == 'Darwin':
+  if current_platform_is_darwin():
     rss_bytes = maxrss
   else:
     rss_bytes = maxrss / KB
