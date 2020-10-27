@@ -27,6 +27,10 @@ try:
   import numpy
 except ImportError:
   numpy = None
+try:
+  from pynvml.smi import nvidia_smi
+except ImportError:
+  nvidia_smi = None
 
 CODE_RESET = '\033[0m'
 CODE_BLACK = '\033[1;30m'
@@ -474,6 +478,7 @@ def parse_args(parser, args=None):
 
 KB = float(10**3)
 GB = float(10**9)  # 1000000000
+MiB = float(2**20)  # 1048576
 GiB = float(2**30)  # 1073741824
 
 
@@ -488,7 +493,7 @@ def current_platform_is_linux():
 
 
 def get_rss():
-  'get memory usage if psutil is installed'
+  'get high water mark resident memory usage'
   rss_bytes = 0
   maxrss = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
   if current_platform_is_darwin():
@@ -501,8 +506,29 @@ def get_rss():
   return rss_gb
 
 
+def get_rss_and_total():
+  'resident and total physical memory in GB'
+  total = (os.sysconf('SC_PAGE_SIZE') * os.sysconf('SC_PHYS_PAGES')) / GB
+  return (get_rss(), total)
+
+
+def get_gpu_used_and_total():
+  'total physical memory in GB'
+
+  if nvidia_smi is None:
+    return 0, 0
+
+  nvsmi = nvidia_smi.getInstance()
+  qresult = nvsmi.DeviceQuery('memory.used, memory.total')
+  mem = qresult['gpu'][0]['fb_memory_usage']
+  assert mem['unit'] == 'MiB'
+  used = (mem['used'] * MiB) / GiB
+  total = (mem['total'] * MiB) / GiB
+  return used, total
+
+
 class T(object):
-  'simple timer '
+  'simple timer'
 
   def __init__(self, name):
     self.name = name
@@ -516,11 +542,16 @@ class T(object):
     self.end = time.perf_counter()
     self.interval = self.end - self.start
     gc.collect()
+    rss, total = get_rss_and_total()
+    gpu_used, gpu_total = get_gpu_used_and_total()
     logging.info(
-        '%s [%s sec] [%s GB]',
+        '%s [%s sec] [%s/%s GB] [%s/%s GB gpu]',
         self.name.rjust(40),
         yellow_text('% 7.2f' % (self.interval)),
-        yellow_text('% 6.2f' % (get_rss())),
+        yellow_text('% 6.2f' % (rss)),
+        yellow_text('%02.2f' % (total)),
+        yellow_text('% 6.2f' % (gpu_used)),
+        yellow_text('%02.2f' % (gpu_total)),
     )
 
 
