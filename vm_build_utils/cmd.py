@@ -494,7 +494,7 @@ def get_rss():
   if current_platform_is_darwin():
     rss_bytes = maxrss
   else:
-    rss_bytes = maxrss / KB
+    rss_bytes = maxrss * KB
 
   rss_gb = rss_bytes / GB
 
