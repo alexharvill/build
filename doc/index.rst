@@ -31,6 +31,13 @@ A python virtual env is expected.
    vm_build_utils_retina_icons
    vm_build_utils_vcpkg
 
+.. toctree::
+   :maxdepth: 1
+   :caption: system setup
+
+   system_ubuntu
+   system_osx
+
 
 
 Indices and tables
