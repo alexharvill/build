@@ -23,8 +23,8 @@ The following third party packages are required
 
 Install OSX
 -----------
-Download catalina installer in Mac AppStore ( using https://itunes.apple.com/us/app/macos-catalina/id1466841314?ls=1&mt=12 )
-make bootable usb drive
+| Download catalina installer in Mac AppStore ( using https://itunes.apple.com/us/app/macos-catalina/id1466841314?ls=1&mt=12 )
+| make bootable usb drive
 
 .. code-block:: bash
 
@@ -68,9 +68,9 @@ Copy loging screen background ( file types need not match)
 
    cp /Volumes/DriveName\ -\ Data/Users/Shared/bg.png /Volumes/DriveName/System/Library/Desktop\ Pictures/Catalina.heic
 |
-| Reboot into normal mode
-| Change any option in System Preferences -> Users & Groups -> Login Options to invalidate the cached image
-| Enjoy your new shiny login background.
+| Reboot
+| Toggle System Preferences > Users & Groups > Login Options > Password Hints
+| ( you can toggle it back off, just need to force refresh )
 
 Install Xcode
 -------------
