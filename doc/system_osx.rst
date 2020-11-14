@@ -26,6 +26,7 @@ Install OSX
 Download catalina installer in Mac AppStore ( using https://itunes.apple.com/us/app/macos-catalina/id1466841314?ls=1&mt=12 )
 make bootable usb drive
 .. code-block:: bash
+
   sudo /Applications/Install\ macOS\ Catalina.app/Contents/Resources/createinstallmedia --volume /Volumes/MyVolume
 |
 reboot
@@ -39,6 +40,7 @@ Set umask
 ------------------------------------
 
 .. code-block:: bash
+
    sudo launchctl config system umask 002
 |
 
@@ -47,16 +49,19 @@ Set login screen
 Reboot your mac holding Cmd+R to get into recovery mode
 Open up the terminal window
 .. code-block:: bash
+
    diskutil apfs list
 |
 
 find your drive-name like disk2s1 and and decrypt hd
 .. code-block:: bash
+
    diskutil apfs unlockVolume /dev/disk2s1 # ( or whatever you found above )
 |
 
 Copy loging screen background ( file types need not match)
 .. code-block:: bash
+
    cp /Volumes/DriveName\ -\ Data/Users/Shared/bg.png /Volumes/DriveName/System/Library/Desktop\ Pictures/Catalina.heic
 |
 Reboot into normal mode
