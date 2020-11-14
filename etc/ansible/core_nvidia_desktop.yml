@@ -1,0 +1,70 @@
+---
+- name: Setup nvidia drivers
+  hosts: all
+  become: yes
+  tasks:
+
+    - name: Update and upgrade apt packages
+      apt:
+          upgrade: dist
+          update_cache: yes
+
+    - name: Kill X before install
+      service:
+        name: gdm3
+        state: stopped
+
+    # - name: Install linux-aws of packages
+    #   apt:
+    #     name: linux-aws
+    #     only_upgrade: yes
+
+    - name: Blacklist the graphics driver module
+      kernel_blacklist:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - vga16fb
+        - nouveau
+        - rivafb
+        - nvidiafb
+        - rivatv
+
+    - name: Add audit param to grub
+      lineinfile:
+        path: /etc/default/grub
+        regex: '^GRUB_CMDLINE_LINUX=(.*)$'
+        line: 'GRUB_CMDLINE_LINUX="rdblacklist=nouveau"'
+        backrefs: yes
+
+    - name: update-grub
+      shell: update-grub
+
+    - name: reboot me
+      reboot:
+        reboot_timeout : 360
+
+    - name: Create packages directory
+      file:
+        path: /home/ubuntu/packages
+        state: directory
+        mode: 0755
+
+    - name: Kill X before install
+      service:
+        name: gdm3
+        state: stopped
+
+    - name: download linux driver
+      get_url:
+        url: http://us.download.nvidia.com/XFree86/Linux-x86_64/450.57/NVIDIA-Linux-x86_64-450.57.run
+        dest: /home/ubuntu/packages
+
+    - name: Install the nvidia driver
+      shell: /bin/sh ./NVIDIA-Linux-x86_64*.run -s
+      args:
+        chdir: /home/ubuntu/packages
+
+    - name: reboot me
+      reboot:
+        reboot_timeout : 360

@@ -1,0 +1,43 @@
+---
+
+- name: Install TEV
+  hosts: all
+  become: yes
+  tasks:
+
+    - name: Install list of packages for tev
+      apt:
+        name:
+          - xorg-dev
+          - libglu1-mesa-dev
+          - zlib1g-dev
+          - zenity
+        state: present
+        install_recommends: yes
+
+    - name: Create working directory for building
+      file:
+        path: /root/build
+        state: directory
+
+    - name: clone Tev
+      git:
+        repo: https://github.com/Tom94/tev.git
+        dest: /root/build/tev
+        version: 57e617c6759dc5397b406a75bf67ed9580bda8bd
+
+    - name: Create Tev build dir
+      file:
+        path: /root/build/tev/build
+        state: directory
+
+    - name: CMake Tev
+      shell: cmake ..
+      args:
+        chdir: /root/build/tev/build
+
+    - name: Build Tev
+      shell: make -j {{ansible_processor_vcpus}} install
+      args:
+        chdir: /root/build/tev/build
+

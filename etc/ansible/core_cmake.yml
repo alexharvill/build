@@ -1,0 +1,21 @@
+---
+
+- name: Install CMake
+  hosts: all
+  become: yes
+  vars:
+    majmin: 3.16
+    majminpoint: 3.16.4
+
+  tasks:
+    - name: download cmake
+      unarchive:
+          src: https://cmake.org/files/v{{majmin}}/cmake-{{majminpoint}}.tar.gz
+          dest: /root/build
+          remote_src: yes
+
+    - name: build and install cmake
+      shell: ./bootstrap && make -j {{ansible_processor_vcpus}} install
+      args:
+        executable: /bin/bash
+        chdir: /root/build/cmake-{{majminpoint}}

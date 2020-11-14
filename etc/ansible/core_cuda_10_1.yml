@@ -1,0 +1,45 @@
+---
+- name: Setup CUDA
+  hosts: all
+  become: yes
+  vars:
+    cuda_version: 10.1
+  environment:
+    DEBIAN_FRONTEND: noninteractive
+  tasks:
+
+    - name: Update and upgrade apt packages
+      apt:
+          upgrade: dist
+          update_cache: yes
+          cache_valid_time: 86400 #One day
+
+    - name: Install cuda
+      apt:
+        name: "{{ packages }}"
+      vars:
+        packages:
+          - nvidia-cuda-toolkit
+
+    - name: copy cudnn to machine and unarchive
+      unarchive:
+          src: /tmp/cudnn.tgz
+          dest: /tmp
+
+    - name: chmod cudnn libs
+      shell:
+        chmod 0644 /tmp/cuda/lib64/libcudnn.so*
+
+    - name: Create /usr/local/lib/x86_64-linux-gnu
+      file:
+        path: /usr/local/lib/x86_64-linux-gnu
+        state: directory
+        mode: u=rwx,g=rx,o=rx
+
+    - name: install cudnn libs
+      shell:
+        cp -dp /tmp/cuda/lib64/libcudnn.so* /usr/local/lib/x86_64-linux-gnu
+
+    - name: rebuild ld cache
+      shell:
+        rm /etc/ld.so.cache && ldconfig

@@ -1,0 +1,38 @@
+---
+- name: Setup for build
+  hosts: all
+  become: yes
+  tasks:
+
+    - name: Create working directory for building
+      file:
+        path: /root/build
+        state: directory
+
+    - name: Update apt packages
+      apt:
+        upgrade: dist
+        update_cache: yes
+
+    - name: Install a list of packages
+      apt:
+        name: "{{ packages }}"
+      vars:
+        packages:
+          - sudo
+          - unzip
+          - curl
+          - git
+          - g++
+          - gdb
+          - software-properties-common
+          - xorg-dev
+          - libssl-dev
+          - python3-venv
+          - vim
+
+    - name: Remove apt temp files
+      apt:
+        autoremove: yes
+        purge: yes
+
