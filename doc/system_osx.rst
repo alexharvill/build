@@ -30,11 +30,11 @@ make bootable usb drive
 
   sudo /Applications/Install\ macOS\ Catalina.app/Contents/Resources/createinstallmedia --volume /Volumes/MyVolume
 |
-reboot
-boot from usb by holding option on reboot
-erase HD in disk util
-format HD in disk util using APFS encrypted( case insensitive)
-turn on FileVault
+| reboot
+| boot from usb by holding option on reboot
+| erase HD in disk util
+| format HD in disk util using APFS encrypted( case insensitive)
+| turn on FileVault
 |
 
 Set umask
@@ -47,8 +47,8 @@ Set umask
 
 Set login screen
 ------------------------------------
-Reboot your mac holding Cmd+R to get into recovery mode
-Open up the terminal window
+| Reboot your mac holding Cmd+R to get into recovery mode
+| Open up the terminal window
 
 .. code-block:: bash
 
@@ -68,9 +68,9 @@ Copy loging screen background ( file types need not match)
 
    cp /Volumes/DriveName\ -\ Data/Users/Shared/bg.png /Volumes/DriveName/System/Library/Desktop\ Pictures/Catalina.heic
 |
-Reboot into normal mode
-Change any option in System Preferences -> Users & Groups -> Login Options to invalidate the cached image
-Enjoy your new shiny login background.
+| Reboot into normal mode
+| Change any option in System Preferences -> Users & Groups -> Login Options to invalidate the cached image
+| Enjoy your new shiny login background.
 
 Install Xcode
 -------------

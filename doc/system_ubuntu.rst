@@ -9,10 +9,10 @@ Linux Requirements
 
 Ubuntu 20.04.1 Setup Notes
 ==========================
-Install Ubuntu with user ubuntu
-
-LOCAL: Setup Anisble
-    You will install OpenSSH and Ansible as root, run these in a terminal
+| Install Ubuntu with user ubuntu
+|
+| LOCAL: Setup Anisble
+|     You will install OpenSSH and Ansible as root, run these in a terminal
 
 .. code-block:: bash
 
@@ -37,8 +37,8 @@ REMOTE: install ansible
    pip install ansible==2.9.11
 
 
-REMOTE: install sshpass
-download ssh pass and save in /tmp
+| REMOTE: install sshpass
+| download ssh pass and save in /tmp
 
 .. code-block:: bash
 
