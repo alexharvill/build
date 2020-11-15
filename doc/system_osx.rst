@@ -72,6 +72,15 @@ Copy loging screen background ( file types need not match)
 | Toggle System Preferences > Users & Groups > Login Options > Password Hints
 | ( you can toggle it back off, just need to force refresh )
 
+
+Setup SSH + hostname
+------------------------------------
+| System Preferences > Sharing
+| click LOCK icon and authenticate
+| Check Remote Login
+| Computer Name = MACHINE_NAME
+| sudo scutil --set HostName MACHINE_NAME
+
 Install Xcode
 -------------
 
