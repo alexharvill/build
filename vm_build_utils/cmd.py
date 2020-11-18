@@ -530,9 +530,10 @@ def get_gpu_used_and_total():
 class T(object):
   'simple timer'
 
-  def __init__(self, name):
+  def __init__(self, name, level=logging.INFO):
     self.name = name
     self.start = self.end = self.interval = 0
+    self.level = level
 
   def __enter__(self):
     self.start = time.perf_counter()
@@ -544,7 +545,8 @@ class T(object):
     gc.collect()
     rss, total = get_rss_and_total()
     gpu_used, gpu_total = get_gpu_used_and_total()
-    logging.info(
+    logging.log(
+        self.level,
         '%s [%s sec] [%s/%s GB] [%s/%s GB gpu]',
         self.name.rjust(40),
         yellow_text('% 7.2f' % (self.interval)),
