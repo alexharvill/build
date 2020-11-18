@@ -12,6 +12,7 @@ import argparse
 import logging
 import subprocess
 import unittest
+import importlib
 import pprint
 from pathlib import Path
 
@@ -287,11 +288,28 @@ class Build():
     if pattern.endswith('.py'):
       pattern = pattern[:-3]
 
+    test_suite = unittest.TestSuite()
+
+    test_dir = self.project_dir / 'test/python'
+    sys.path.insert(0, str(test_dir))
+    for root_path, _, file_names in os.walk(test_dir):
+
+      for file_name in file_names:
+        if file_name == '__init__.py':
+          continue
+        abs_file_path = Path(root_path) / file_name
+        if abs_file_path.suffix != '.py':
+          continue
+        rel_file_path = abs_file_path.relative_to(test_dir)
+        module_path = str(rel_file_path).replace('/', '.').replace('.py', '')
+        with vm_build_utils.cmd.T('import ' + module_path, level=logging.DEBUG):
+          module = importlib.import_module(module_path)
+          tmp_test_suite = unittest.loader.findTestCases(module)
+          for test in self.filter_matching_tests(tmp_test_suite, pattern):
+            test_suite.addTest(test)
+
     with vm_build_utils.cmd.T('build runner', level=logging.DEBUG):
       runner = unittest.runner.TextTestRunner(verbosity=2)
-
-    with vm_build_utils.cmd.T('discover tests', level=logging.DEBUG):
-      test_suite = unittest.defaultTestLoader.discover('test/python')
 
     with vm_build_utils.cmd.T('configure logs', level=logging.DEBUG):
       logger = logging.getLogger()
@@ -300,12 +318,6 @@ class Build():
       for modname in ['boto3', 'botocore', 's3transfer', 'urllib3']:
         modlogger = logging.getLogger(modname)
         modlogger.setLevel(logging.WARNING)
-
-    with vm_build_utils.cmd.T('make test suite', level=logging.DEBUG):
-      tmp_test_suite = test_suite
-      test_suite = unittest.TestSuite()
-      for test in self.filter_matching_tests(tmp_test_suite, pattern):
-        test_suite.addTest(test)
 
     with vm_build_utils.cmd.T('run test suite', level=logging.DEBUG):
       return runner.run(test_suite)
