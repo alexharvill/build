@@ -280,8 +280,6 @@ class Build():
       )
       return
 
-    runner = unittest.runner.TextTestRunner(verbosity=2)
-
     pattern = self.pattern
     if pattern is None:
       pattern = '.'
@@ -289,21 +287,28 @@ class Build():
     if pattern.endswith('.py'):
       pattern = pattern[:-3]
 
-    test_suite = unittest.defaultTestLoader.discover('test/python')
+    with vm_build_utils.cmd.T('build runner', level=logging.DEBUG):
+      runner = unittest.runner.TextTestRunner(verbosity=2)
 
-    logger = logging.getLogger()
-    logger.propagate = False
+    with vm_build_utils.cmd.T('discover tests', level=logging.DEBUG):
+      test_suite = unittest.defaultTestLoader.discover('test/python')
 
-    for modname in ['boto3', 'botocore', 's3transfer', 'urllib3']:
-      modlogger = logging.getLogger(modname)
-      modlogger.setLevel(logging.WARNING)
+    with vm_build_utils.cmd.T('configure logs', level=logging.DEBUG):
+      logger = logging.getLogger()
+      logger.propagate = False
 
-    tmp_test_suite = test_suite
-    test_suite = unittest.TestSuite()
-    for test in self.filter_matching_tests(tmp_test_suite, pattern):
-      test_suite.addTest(test)
+      for modname in ['boto3', 'botocore', 's3transfer', 'urllib3']:
+        modlogger = logging.getLogger(modname)
+        modlogger.setLevel(logging.WARNING)
 
-    return runner.run(test_suite)
+    with vm_build_utils.cmd.T('make test suite', level=logging.DEBUG):
+      tmp_test_suite = test_suite
+      test_suite = unittest.TestSuite()
+      for test in self.filter_matching_tests(tmp_test_suite, pattern):
+        test_suite.addTest(test)
+
+    with vm_build_utils.cmd.T('run test suite', level=logging.DEBUG):
+      return runner.run(test_suite)
 
   def run_ios(self, cmake_cmd):
     'run cmake to create build dir, run cocoa pods install, open xcode'
