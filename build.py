@@ -338,18 +338,19 @@ class Build():
     is_gem_lock = (self.build_dir / 'Gemfile.lock').exists()
 
     pod_exec_prefix = []
-    if is_gem and not is_gem_lock:
-      logging.info('installing Gem bundle')
-      self.check_call(
-          [self.bundle_path, 'config', 'set', 'path', self.gem_bundle_path],
-          cwd=self.build_dir,
-      )
-
-      self.check_call(
-          [self.bundle_path, 'install'],
-          cwd=self.build_dir,
-      )
+    if is_gem:
       pod_exec_prefix = [self.bundle_path, 'exec']
+      if not is_gem_lock:
+        logging.info('installing Gem bundle')
+        self.check_call(
+            [self.bundle_path, 'config', 'set', 'path', self.gem_bundle_path],
+            cwd=self.build_dir,
+        )
+
+        self.check_call(
+            [self.bundle_path, 'install'],
+            cwd=self.build_dir,
+        )
 
     if self.xcode_proj is not None:
       xcode_prjs = list(self.build_dir.glob(self.xcode_proj + '/*.xcodeproj'))
