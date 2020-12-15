@@ -212,14 +212,6 @@ class Build():
     logging.debug(pprint.pformat(dict(vars(self))))
 
     self.bundle_path = Path(self.bundle_path)
-    # if self.gem_path.exists():
-    #   # ask gem where pod may be installed
-    #   gemdir = vm_build_utils.cmd.execute(
-    #       [str(self.gem_path), 'environment', 'gemdir'],
-    #       output=True,
-    #   )
-    #   gemdir = Path(gemdir.decode('utf-8').strip())
-    #   self.pod_path = gemdir / 'bin' / 'pod'
 
     self.run()
 
