@@ -95,7 +95,11 @@ def build_parser():
       help='path to the project',
       default='.',
   )
-
+  AP.add_argument(
+      '--bundle-path',
+      help='path to the bundle executable (builds ruby projects)',
+      default='/usr/local/opt/ruby/bin/bundle',
+  )
   commands = AP.add_subparsers(
       dest='command',
       help='available commands to run',
@@ -162,6 +166,7 @@ class Build():
     self.run_always = self.run_confirm = self.dummy = self.incremental = None
     self.clean = self.uninstall = self.test = self.lint = None
     self.toolchain_path = self.vcpkg_json = self.xcode_proj = None
+    self.bundle_path = None
 
     args = vm_build_utils.cmd.parse_args(build_parser())
 
@@ -205,6 +210,16 @@ class Build():
     self.gem_bundle_path = self.root / 'build' / devrel_tc_dir / project_vendor
 
     logging.debug(pprint.pformat(dict(vars(self))))
+
+    self.bundle_path = Path(self.bundle_path)
+    # if self.gem_path.exists():
+    #   # ask gem where pod may be installed
+    #   gemdir = vm_build_utils.cmd.execute(
+    #       [str(self.gem_path), 'environment', 'gemdir'],
+    #       output=True,
+    #   )
+    #   gemdir = Path(gemdir.decode('utf-8').strip())
+    #   self.pod_path = gemdir / 'bin' / 'pod'
 
     self.run()
 
@@ -327,6 +342,23 @@ class Build():
 
     self.check_call(cmake_cmd, cwd=self.build_dir)
 
+    is_gem = (self.build_dir / 'Gemfile').exists()
+    is_gem_lock = (self.build_dir / 'Gemfile.lock').exists()
+
+    pod_exec_prefix = []
+    if is_gem and not is_gem_lock:
+      logging.info('installing Gem bundle')
+      self.check_call(
+          [self.bundle_path, 'config', 'set', 'path', self.gem_bundle_path],
+          cwd=self.build_dir,
+      )
+
+      self.check_call(
+          [self.bundle_path, 'install'],
+          cwd=self.build_dir,
+      )
+      pod_exec_prefix = [self.bundle_path, 'exec']
+
     if self.xcode_proj is not None:
       xcode_prjs = list(self.build_dir.glob(self.xcode_proj + '/*.xcodeproj'))
     else:
@@ -336,23 +368,7 @@ class Build():
 
       xc_build_dir = xcode_prj.parent
 
-      is_gem = (xc_build_dir / 'Gemfile').exists()
-      is_gem_lock = (xc_build_dir / 'Gemfile.lock').exists()
       is_pod = (xc_build_dir / 'Podfile').exists()
-
-      pod_exec_prefix = []
-      if is_gem and not is_gem_lock:
-        logging.info('installing Gem bundle')
-        self.check_call(
-            ['bundle', 'config', 'set', 'path', self.gem_bundle_path],
-            cwd=xc_build_dir,
-        )
-
-        self.check_call(
-            ['bundle', 'install'],
-            cwd=xc_build_dir,
-        )
-        pod_exec_prefix = ['bundle', 'exec']
 
       if is_pod:
         orig_xcode_prj = xcode_prj
