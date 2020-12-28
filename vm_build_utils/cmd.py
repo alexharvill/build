@@ -407,12 +407,14 @@ VERBOSE_MAP = {0: logging.WARNING, 1: logging.INFO, 2: logging.DEBUG}
 
 def add_verbose_parse_arg(parser):
   'add verbosity levels to a parser'
-  parser.add_argument(
-      '-v',
-      '--verbose',
-      action='count',
-      help='verbose level... repeat up to 2 times',
-  )
+  if not getattr(parser, 'vm_build_utils_has_verbose', False):
+    parser.add_argument(
+        '-v',
+        '--verbose',
+        action='count',
+        help='verbose level... repeat up to 2 times',
+    )
+    parser.vm_build_utils_has_verbose = True
 
 
 def set_log_level_from_args(args):
@@ -424,20 +426,22 @@ def set_log_level_from_args(args):
 
 def add_run_mode_parse_arg(parser):
   'add controls to run sub commands / persistent system operations'
-  RUN_MODE_GROUP = parser.add_mutually_exclusive_group()
-  RUN_MODE_GROUP.add_argument(
-      '--run-never',
-      action='store_true',
-      help='no actions will be taken, only logging will be performed')
-  RUN_MODE_GROUP.add_argument(
-      '--run-confirm',
-      action='store_true',
-      help='actions will be performed with user confirmation')
-  RUN_MODE_GROUP.add_argument(
-      '--run-always',
-      action='store_true',
-      help='actions will be performed always [ default ]',
-  )
+  if not getattr(parser, 'vm_build_utils_has_run_mode', False):
+    RUN_MODE_GROUP = parser.add_mutually_exclusive_group()
+    RUN_MODE_GROUP.add_argument(
+        '--run-never',
+        action='store_true',
+        help='no actions will be taken, only logging will be performed')
+    RUN_MODE_GROUP.add_argument(
+        '--run-confirm',
+        action='store_true',
+        help='actions will be performed with user confirmation')
+    RUN_MODE_GROUP.add_argument(
+        '--run-always',
+        action='store_true',
+        help='actions will be performed always [ default ]',
+    )
+    parser.vm_build_utils_has_run_mode = True
 
 
 def setup_run_mode(args):
@@ -461,11 +465,18 @@ def setup_run_mode(args):
   return result
 
 
-def parse_args(parser, args=None):
-  'parse, handle logging and run mode arguments'
+def finish_args(parser):
+  'add common arguments to a parser if not already added: verbose, run_mode'
   add_verbose_parse_arg(parser)
 
   add_run_mode_parse_arg(parser)
+
+  return parser
+
+
+def parse_args(parser, args=None):
+  'parse, handle logging and run mode arguments'
+  finish_args(parser)
 
   args = parser.parse_args(args=args)
 
