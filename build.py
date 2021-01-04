@@ -436,6 +436,7 @@ class Build():
 
     self.check_call(['mkdir', '-p', self.build_dir], self.root)
 
+    cmake_cmd_suffix = []
     cmake_cmd = ['cmake', '--target', 'clean']
     for varname, value in cmake_opts.items():
       cmake_cmd.append('-D%s=%s' % (varname, value))
@@ -456,6 +457,7 @@ class Build():
           '-GXcode',
           '--debug-trycompile',
       ]
+      cmake_cmd_suffix += ['-quiet']
     self.check_call(cmake_cmd, cwd=self.build_dir)
 
     build_cmd = ['cmake', '--build', '.']
@@ -473,6 +475,9 @@ class Build():
       build_cmd += ['--verbose']
 
     build_cmd += ['--parallel', str(self.threads)]
+    if cmake_cmd_suffix:
+      build_cmd.append('--')
+      build_cmd += cmake_cmd_suffix
 
     self.check_call(build_cmd, cwd=self.build_dir)
 
