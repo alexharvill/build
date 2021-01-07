@@ -71,6 +71,7 @@ class Build():
             'INSTALL_NAME_DIR=' + lib_dir,
             str(self.vcpkg_path),
             'install',
+            '--recurse',
             '--triplet',
             triplet,
             '--overlay-triplets=%s' % self.triplet_overlay,
