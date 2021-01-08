@@ -98,7 +98,7 @@ def build_parser():
   AP.add_argument(
       '--bundle-path',
       help='path to the bundle executable (builds ruby projects)',
-      default='/usr/local/opt/ruby/bin/bundle',
+      default='/usr/local/opt/ruby@2.7/bin/bundle',
   )
   commands = AP.add_subparsers(
       dest='command',
