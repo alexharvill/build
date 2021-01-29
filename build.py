@@ -299,7 +299,7 @@ class Build():
 
     test_dir = self.project_dir / 'test/python'
     sys.path.insert(0, str(test_dir))
-    for root_path, _, file_names in os.walk(test_dir):
+    for root_path, _, file_names in os.walk(test_dir, followlinks=True):
 
       for file_name in file_names:
         if file_name == '__init__.py':
