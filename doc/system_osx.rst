@@ -45,6 +45,18 @@ Set umask
    sudo launchctl config system umask 002
 |
 
+Set hostname
+------------------------------------
+
+.. code-block:: bash
+
+  sudo scutil --set ComputerName "name"
+  sudo scutil --set LocalHostName "name"
+  sudo scutil --set HostName "name"
+|
+
+
+
 Set login screen
 ------------------------------------
 | Reboot your mac holding Cmd+R to get into recovery mode
