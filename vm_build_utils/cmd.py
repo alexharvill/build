@@ -261,6 +261,13 @@ def setup_logging(
     numpy_linewidth=75,
     stream=None,
     color=True,
+    force_warning_modules=(
+        'boto3',
+        'botocore',
+        's3transfer',
+        'urllib3',
+        'websockets',
+    ),
 ):
   'setup reasonable logging defaults'
 
@@ -272,7 +279,7 @@ def setup_logging(
     logger.setLevel(level)
     logger.propagate = False
 
-    for modname in ['boto3', 'botocore', 's3transfer', 'urllib3']:
+    for modname in force_warning_modules:
       modlogger = logging.getLogger(modname)
       modlogger.setLevel(logging.WARNING)
 
@@ -288,7 +295,7 @@ def setup_logging(
   logger = logging.getLogger()
   logger.propagate = False
 
-  for modname in ['boto3', 'botocore', 's3transfer', 'urllib3']:
+  for modname in force_warning_modules:
     modlogger = logging.getLogger(modname)
     modlogger.setLevel(logging.WARNING)
 
@@ -329,7 +336,7 @@ def setup_patching(setup_ssl=True):
 
 
 def setup_tensorflow():
-  'make tensorflow silent unless '
+  'make tensorflow silent unless TF_CPP_MIN_LOG_LEVEL envvar found'
   tf_log_key = 'TF_CPP_MIN_LOG_LEVEL'
   tf_logger = logging.getLogger('tensorflow')
   if tf_log_key not in os.environ:
