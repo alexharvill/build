@@ -481,11 +481,14 @@ def finish_args(parser):
   return parser
 
 
-def parse_args(parser, args=None):
+def parse_args(parser, args=None, parse_known_args=False):
   'parse, handle logging and run mode arguments'
   finish_args(parser)
 
-  args = parser.parse_args(args=args)
+  if parse_known_args:
+    args, _ = parser.parse_known_args(args=args)
+  else:
+    args = parser.parse_args(args=args)
 
   set_log_level_from_args(args)
 
