@@ -529,7 +529,10 @@ def get_rss():
 
 def get_rss_and_total():
   'resident and total physical memory in GB'
-  total = (os.sysconf('SC_PAGE_SIZE') * os.sysconf('SC_PHYS_PAGES')) / GB
+  try:
+    total = (os.sysconf('SC_PAGE_SIZE') * os.sysconf('SC_PHYS_PAGES')) / GB
+  except ValueError:
+    total = -1
   return (get_rss(), total)
 
 
