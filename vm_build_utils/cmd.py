@@ -472,9 +472,44 @@ def setup_run_mode(args):
   return result
 
 
+def add_file_logging_parse_arg(parser):
+  'add file logging output + verbosity to a parser'
+  if not getattr(parser, 'vm_build_utils_has_file_log', False):
+    parser.add_argument(
+        '-fv',
+        '--file-verbose',
+        action='count',
+        help='verbose level for --file-log ... repeat up to 2 times',
+    )
+    parser.add_argument(
+        '--file-log',
+        default=None,
+        type=Path,
+        help='direct logging stream to this file in addition to stderr',
+    )
+    parser.vm_build_utils_has_file_log = True
+
+
+def set_file_logging_from_args(args):
+  'args is a command line parser result - use it to configure file logging'
+  if args.file_log is None:
+    return
+  if args.file_verbose is None:
+    args.file_verbose = 0
+
+  level = VERBOSE_MAP[args.file_verbose]
+  file_log = logging.FileHandler(args.file_log, mode='w')
+  file_log.setLevel(level)
+  file_log.setFormatter(
+      logging.Formatter('%(levelname)s %(message)s', None, '%'))
+  logging.getLogger('').addHandler(file_log)
+
+
 def finish_args(parser):
   'add common arguments to a parser if not already added: verbose, run_mode'
   add_verbose_parse_arg(parser)
+
+  add_file_logging_parse_arg(parser)
 
   add_run_mode_parse_arg(parser)
 
@@ -491,6 +526,7 @@ def parse_args(parser, args=None, parse_known_args=False):
     args = parser.parse_args(args=args)
 
   set_log_level_from_args(args)
+  set_file_logging_from_args(args)
 
   args.run_mode = setup_run_mode(args)
 

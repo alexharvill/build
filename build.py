@@ -166,7 +166,7 @@ class Build():
     self.run_always = self.run_confirm = self.dummy = self.incremental = None
     self.clean = self.uninstall = self.test = self.lint = None
     self.toolchain_path = self.vcpkg_json = self.xcode_proj = None
-    self.bundle_path = None
+    self.bundle_path = self.file_log = self.file_verbose = None
 
     args = vm_build_utils.cmd.parse_args(build_parser())
 
