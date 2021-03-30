@@ -194,6 +194,19 @@ def execute(
   return None
 
 
+def execute_multiline_str(**kwargs):
+  'wraps execute by converting multiline "cmd" kwarg to strings'
+  cmd = kwargs.pop('cmd')
+  if cmd is None:
+    raise ValueError('expected multiline string keyword arg "cmd"')
+  lines = cmd.split('\n')
+  lines = [x.strip() for x in lines]
+  cmd = ' '.join(lines)
+  cmd = cmd.split(' ')
+  cmd = [x for x in cmd if x]  # remove empty argv
+  execute(cmd, **kwargs)
+
+
 def execute_callback(
     message,
     callback,
