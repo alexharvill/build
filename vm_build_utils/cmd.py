@@ -529,6 +529,24 @@ def finish_args(parser):
   return parser
 
 
+def log_parsed_args(args_namespace, level=logging.DEBUG):
+  'log each elemenet in an argparser namespace'
+  items = dict(vars(args_namespace)).items()
+  key_whitespace_len = -1
+  for key, _ in items:
+    key_whitespace_len = max(key_whitespace_len, len(key))
+
+  key_whitespace_len += 2
+  newline_whitespace_len = key_whitespace_len + 6
+  newline_whitespace = ''.join(['\n'] + [' '] * newline_whitespace_len)
+
+  for key, value in items:
+    tmp = str(value)
+    if isinstance(value, list):
+      tmp = newline_whitespace.join([str(c) for c in value])
+    logging.log(level, '%s[%s]', key.rjust(key_whitespace_len), tmp)
+
+
 def parse_args(parser, args=None, parse_known_args=False):
   'parse, handle logging and run mode arguments'
   finish_args(parser)
