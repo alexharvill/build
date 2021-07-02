@@ -201,6 +201,7 @@ def execute_multiline_str(**kwargs):
     raise ValueError('expected multiline string keyword arg "cmd"')
   lines = cmd.split('\n')
   lines = [x.strip() for x in lines]
+  lines = [x for x in lines if not x.startswith('#')]
   cmd = ' '.join(lines)
   cmd = cmd.split(' ')
   cmd = [x for x in cmd if x]  # remove empty argv
