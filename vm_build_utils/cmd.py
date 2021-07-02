@@ -547,12 +547,12 @@ def log_parsed_args(args_namespace, level=logging.DEBUG):
     logging.log(level, '%s[%s]', key.rjust(key_whitespace_len), tmp)
 
 
-def parse_args(parser, args=None, parse_known_args=False):
+def parse_args(parser, args=None, parse_known_args=False, return_unknown=False):
   'parse, handle logging and run mode arguments'
   finish_args(parser)
 
   if parse_known_args:
-    args, _ = parser.parse_known_args(args=args)
+    args, unknown = parser.parse_known_args(args=args)
   else:
     args = parser.parse_args(args=args)
 
@@ -561,6 +561,8 @@ def parse_args(parser, args=None, parse_known_args=False):
 
   args.run_mode = setup_run_mode(args)
 
+  if return_unknown:
+    return args, unknown
   return args
 
 
