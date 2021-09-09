@@ -17,7 +17,7 @@ set( asset_build_directory ${CMAKE_CURRENT_BINARY_DIR}/${asset_name})
 
 include(GNUInstallDirs)
 
-macro( build_retina_icons iconset_name src_icon_name )
+macro( build_retina_icons iconset_name src_icon_name pad_mode )
 
   set( output_iconset ${asset_build_directory}/${iconset_name} )
   list(APPEND iconsets ${output_iconset})
@@ -30,6 +30,7 @@ macro( build_retina_icons iconset_name src_icon_name )
       --asset-build-dir ${asset_build_directory}
       --iconset ${iconset_name}
       --src ${CMAKE_CURRENT_SOURCE_DIR}/${src_icon_name}
+      --pad-mode ${pad_mode}
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     COMMENT "Generating icons"
   )

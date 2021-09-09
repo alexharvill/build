@@ -183,63 +183,57 @@ def default_imageset_contents_json():
 def default_launchimage_contents_json():
   'universal Contents.json default - must remove shape items before saving'
   return {
-  "images" : [
-    {
-      "orientation" : "portrait",
-      "idiom" : "iphone",
-      "extent" : "full-screen",
-      "filename" : "1242x2688@3x.png",
-      "minimum-system-version" : "12.0",
-      "subtype" : "2688h",
-      "scale" : "3x",
-      "shape": [2688, 1242]
-    },
-    {
-      "orientation" : "portrait",
-      "idiom" : "iphone",
-      "extent" : "full-screen",
-      "filename" : "828x1792@2x.png",
-      "minimum-system-version" : "12.0",
-      "subtype" : "1792h",
-      "scale" : "2x",
-      "shape": [1792, 828]
-    },
-    {
-      "extent" : "full-screen",
-      "idiom" : "iphone",
-      "subtype" : "2436h",
-      "filename" : "1125x2436@3x.png",
-      "minimum-system-version" : "11.0",
-      "orientation" : "portrait",
-      "scale" : "3x",
-      "shape": [2436, 1125]
-    },
-    {
-      "orientation" : "portrait",
-      "idiom" : "iphone",
-      "extent" : "full-screen",
-      "minimum-system-version" : "8.0",
-      "subtype" : "736h",
-      "filename" : "1242x2208@3x.png",
-      "scale" : "3x",
-      "shape": [2208, 1242]
-    },
-    {
-      "orientation" : "portrait",
-      "idiom" : "iphone",
-      "extent" : "full-screen",
-      "filename" : "750x1334@2x.png",
-      "minimum-system-version" : "8.0",
-      "subtype" : "667h",
-      "scale" : "2x",
-      "shape": [1334, 750]
-    }
-  ],
-  "info" : {
-    "version" : 1,
-    "author" : "retina_icons.py"
+      "images": [{
+          "orientation": "portrait",
+          "idiom": "iphone",
+          "extent": "full-screen",
+          "filename": "1242x2688@3x.png",
+          "minimum-system-version": "12.0",
+          "subtype": "2688h",
+          "scale": "3x",
+          "shape": [2688, 1242]
+      }, {
+          "orientation": "portrait",
+          "idiom": "iphone",
+          "extent": "full-screen",
+          "filename": "828x1792@2x.png",
+          "minimum-system-version": "12.0",
+          "subtype": "1792h",
+          "scale": "2x",
+          "shape": [1792, 828]
+      }, {
+          "extent": "full-screen",
+          "idiom": "iphone",
+          "subtype": "2436h",
+          "filename": "1125x2436@3x.png",
+          "minimum-system-version": "11.0",
+          "orientation": "portrait",
+          "scale": "3x",
+          "shape": [2436, 1125]
+      }, {
+          "orientation": "portrait",
+          "idiom": "iphone",
+          "extent": "full-screen",
+          "minimum-system-version": "8.0",
+          "subtype": "736h",
+          "filename": "1242x2208@3x.png",
+          "scale": "3x",
+          "shape": [2208, 1242]
+      }, {
+          "orientation": "portrait",
+          "idiom": "iphone",
+          "extent": "full-screen",
+          "filename": "750x1334@2x.png",
+          "minimum-system-version": "8.0",
+          "subtype": "667h",
+          "scale": "2x",
+          "shape": [1334, 750]
+      }],
+      "info": {
+          "version": 1,
+          "author": "retina_icons.py"
+      }
   }
-}
 
 
 def build_parser():
@@ -298,6 +292,13 @@ def build_parser():
           'INTER_TAB_SIZE',
           'INTER_TAB_SIZE2',
       ],
+  )
+
+  parser.add_argument(
+      '--pad-mode',
+      help='border pad mode',
+      default='pad',
+      choices=['pad', 'copy'],
   )
 
   return parser
@@ -398,6 +399,9 @@ def main():
         print('%s -> %s' % ((src_h, src_w), (target_h, target_w)))
 
         if (src_h, src_w) == (target_h, target_w):
+          dst_img = src_img
+
+        elif args.pad_mode == 'copy':
           dst_img = src_img
 
         else:
