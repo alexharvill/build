@@ -42,24 +42,26 @@ configure_file(conf.py ${CMAKE_CURRENT_BINARY_DIR}/conf.py COPYONLY)
 #  - The Sphinx config has been updated
 
 # make a symlinks to all python source directories
-set(LINK_OUTPUTS "")
-list(LENGTH DIR_LINKS N_DIR_LINKS)
-math(EXPR N_DIR_LINKS_1 "${N_DIR_LINKS} - 1")
-foreach(src_index RANGE 0 ${N_DIR_LINKS_1} 2)
-  math(EXPR dst_index "${src_index} + 1")
-  list(GET DIR_LINKS ${src_index} src)
-  list(GET DIR_LINKS ${dst_index} dst)
+if(DEFINED DIR_LINKS)
+  set(LINK_OUTPUTS "")
+  list(LENGTH DIR_LINKS N_DIR_LINKS)
+  math(EXPR N_DIR_LINKS_1 "${N_DIR_LINKS} - 1")
+  foreach(src_index RANGE 0 ${N_DIR_LINKS_1} 2)
+    math(EXPR dst_index "${src_index} + 1")
+    list(GET DIR_LINKS ${src_index} src)
+    list(GET DIR_LINKS ${dst_index} dst)
 
-  add_custom_command(
-    OUTPUT ${dst}
-    COMMAND
-      ln -s ${src} ${dst}
-      WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    COMMENT "make doc link ${dst}"
-  )
+    add_custom_command(
+      OUTPUT ${dst}
+      COMMAND
+        ln -s ${src} ${dst}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+      COMMENT "make doc link ${dst}"
+    )
 
-  list(APPEND LINK_OUTPUTS ${dst})
-endforeach()
+    list(APPEND LINK_OUTPUTS ${dst})
+  endforeach()
+endif()
 
 message(STATUS " LINK_OUTPUTS ${LINK_OUTPUTS}")
 
@@ -75,13 +77,13 @@ add_custom_command(
     ${PYTHON_SOURCES}
     ${LINK_OUTPUTS}
 	MAIN_DEPENDENCY ${SPHINX_SOURCE}/conf.py
-  COMMENT "Generating documentation with Sphinx"
+  COMMENT "Generating python api documentation with sphinx-apidoc"
 )
 
 # convert .rst files to html
 add_custom_command(OUTPUT ${SPHINX_INDEX_FILE}
 	COMMAND
-		${SPHINX_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR} ${SPHINX_BUILD}
+		${SPHINX_EXECUTABLE} -v ${CMAKE_CURRENT_BINARY_DIR} ${SPHINX_BUILD}
 	WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 	DEPENDS
 		# Other docs files you want to track should go here (or in some variable)
@@ -91,7 +93,7 @@ add_custom_command(OUTPUT ${SPHINX_INDEX_FILE}
     ${LINK_OUTPUTS}
     ${SPHINX_GEN_MODULE}
 	MAIN_DEPENDENCY ${SPHINX_SOURCE}/conf.py
-  COMMENT "Generating html documentation with Sphinx")
+  COMMENT "Generating html documentation with sphinx")
 
 # Nice named target so we can run the job easily
 
